@@ -2,18 +2,14 @@
 //added to a list of rented movies. Display this list whenever a customer checks out
 //a movie.
 
-//variables assigment
-const readline = require('readline');
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
+//variables assignment
 const fs = require('fs');
 var movies = fs.readFileSync("./movies.txt", { encoding: 'utf8', flag: 'r' }).split("\r\n");
-const { List } = require('../../lib/List.js')
+const { List } = require('../../lib/List.js');
 let customers = new List();
 let rentedList = new List();
 let movieList = new List();
+const prompt = require('prompt-sync')({ sigint: true });
 //filling movieList with movies
 for (let i = 0; i < movies.length; ++i) {
     movieList.append(movies[i]);
@@ -21,10 +17,29 @@ for (let i = 0; i < movies.length; ++i) {
 
 //main function
 function kioskManagement() {
-    while(movieList.length>0){
-        console.log(moviesDistribution())
+    let userAction = prompt('Select a Number and press enter:1. Rent a movie 2. Return a movie ')
+    userAction = Number(userAction)
+    let userWantToRent = true
+    if (userAction == 1) {
+        while (movieList.length() > 0 && userWantToRent) {
+            moviesDistribution()
+            let userAction2 = prompt('Would you like to rent another movie? 1.Yes   2.No   3.I want to return a movie')
+            userAction2 = Number(userAction2)
+            if (userAction2 == 2) {
+                userWantToRent = false
+                console.log('thanks for the visit')
+            } if (userAction2 == 3) {
+                returnedMovie()
+            }
+        }
+    }
+    if (userAction == 2) {
+        returnedMovie()
+    } if (movieList.length() < 0) {
+        console.log('No more available movies')
     }
 }
+kioskManagement()
 
 
 //secondary functions
@@ -56,28 +71,43 @@ function displayList(list) {
         }
     }
 }
-    console.log("Available movies: \n");
-    displayList(movieList);
-    rl.question('Insert your name:\n', function (name) {
-        rl.question("What movie would you like? ", function (movie) {
-            checkOut(name, movie, movieList, customers);
-            console.log("\nCustomer Rentals: \n");
-            displayList(customers);
-            console.log("\nMovies Now Available\n");
-            displayList(movieList);
-            console.log("\nRented Movies\n");
-            displayList(rentedList)
-        });
-    })
 
+function moviesDistribution() {
+    console.log("Available movies:");
+    displayList(movieList);
+    const name = prompt('Insert your name:');
+    const movieToRent = prompt("What movie would you like?");
+    if (movieList.contains(movieToRent)) {
+        checkOut(name, movieToRent, movieList, customers);
+        console.log("Customer Rentals:");
+        displayList(customers);
+        console.log("Movies Now Available");
+        displayList(movieList);
+        console.log("Rented Movies");
+        displayList(rentedList)
+    } else {
+        console.log("that movie doesn't exist")
+    }
+}
 
 // Create a check-in function for the video-rental kiosk program so that a returned
 //movies is deleted from the rented movies list and is added back to the available
 //movies list.
 
-/*function checkIn(movie) {
-    if (rentedList.contains(movie)) {
-        rentedList.remove(movie)
-        movieList.append(movie)
+function returnedMovie() {
+    const rentedMovie = prompt('What movie are you returning?')
+    let wantsToReturn = true
+    while (wantsToReturn && movieList.length() > 0) {
+        if (rentedList.contains(rentedMovie)) {
+            rentedList.remove(rentedMovie)
+            movieList.append(rentedMovie)
+            console.log('Your movie is returned!')
+            let anotherMov = prompt('Would you like to return another movie? 1. Yes   2.No')
+            anotherMov = Number(anotherMov)
+            if (anotherMov == 2) {
+                wantsToReturn = false
+            }
+        }
     }
-}*/
+}
+
