@@ -20,22 +20,21 @@ function kioskManagement() {
     let userAction = prompt('Select a Number and press enter:1. Rent a movie 2. Return a movie ')
     userAction = Number(userAction)
     let userWantToRent = true
-    if (userAction == 1) {
-        while (movieList.length() > 0 && userWantToRent) {
-            moviesDistribution()
-            let userAction2 = prompt('Would you like to rent another movie? 1.Yes   2.No   3.I want to return a movie')
-            userAction2 = Number(userAction2)
-            if (userAction2 == 2) {
-                userWantToRent = false
-                console.log('thanks for the visit')
-            } if (userAction2 == 3) {
-                returnedMovie()
-            }
+    while (userAction == 1 && movieList.length() > 0 && userWantToRent) {
+        moviesDistribution()
+        let userAction2 = prompt('Would you like to rent another movie? 1.Yes   2.No   3.I want to return a movie')
+        userAction2 = Number(userAction2)
+        if (userAction2 == 2) {
+            userWantToRent = false
+            thanks()
+        } if (userAction2 == 3) {
+            returnedMovie()
         }
-    }
-    if (userAction == 2) {
+    } 
+    if (userAction==2){
         returnedMovie()
-    } if (movieList.length() < 0) {
+    }
+    if(movieList.length()<0) {
         console.log('No more available movies')
     }
 }
@@ -106,8 +105,12 @@ function returnedMovie() {
             anotherMov = Number(anotherMov)
             if (anotherMov == 2) {
                 wantsToReturn = false
+                thanks()
             }
         }
     }
 }
 
+function thanks() {
+    console.log('Thanks for your visit!')
+}
