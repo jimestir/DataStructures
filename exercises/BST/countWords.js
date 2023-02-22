@@ -6,7 +6,7 @@ const { node, BST } = require('../../lib/binaryTrees.js')
 function countWords(text) {
     let txtSplitted = text.split(' ')
     let BST = fillBST(txtSplitted)
-    BST.traverseInOrder(BST.root)
+    traverseInOrder(BST.root)
 }
 countWords('hola como estas hola estas')
 
