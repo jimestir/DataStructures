@@ -5,6 +5,7 @@ const test2 = [5, 3, 8, 2, 4, 6, 7]
 const test3 = [1, 2]
 const test4 = [5, 3, 8, 2, 4, 6, 9, 10]
 const test5 = [6, 3, 8, 2, 4, 5, 9, 10]
+const test6 = [50, 40, 60, 35, 45, 59, 58, 62, 30, 37, 43, 47, 42, 41, 48, 27, 26, 28, 61, 65, 63, 64, 67]
 
 function fillBST(arr) {
     let newBST = new BST()
@@ -20,70 +21,51 @@ function fillBST(arr) {
     }
     return newBST
 }
-let newBT = fillBST(test5)
+let newBT = fillBST(test6)
 
-// function to get the parent of the node 
-function getParent(node, data) {
-    //if the value of the root is equal to data
-    if (node.data == data) {
-        return node
-    }
+//function to get an array of the parents
+function getParents(node, data, arr) {
     //base case
-    if (node.left && node.left.data == data) {
-        return node
+    if (
+        (node.left && node.left.data == data) ||
+        (node.right && node.right.data == data)
+    ) {
+        //in case that it's child of the root
+        arr.push(node.data)
+        return
     }
-    if (node.right && node.right.data == data) {
-        return node
-    }
-    //keep looking for the parent
+    //keep looking for the parents
+    arr.push(node.data)
     if (data < node.data) {
         node = node.left
+
     } else {
         node = node.right
     }
-    return getParent(node, data)
+    getParents(node, data, arr)
 }
 
 function lowestCommonAncestor(node, v1, v2) {
-    let lowestV = v1
-    let biggerV = v2
-    if (v2 < v1) {
-        lowestV = v2
-        biggerV = v1
+    //set the lowest and biggest element
+    let lowest = v1
+    let bigger = v2
+    if (v1 > v2) {
+        bigger = v1
+        lowest = v2
     }
-    let lowestVParent = getParent(node, lowestV)
-    let commonParent = lowestVParent
-    let found = false
-    while (!found && commonParent != null) {
-        //check if you're in the root
-        if (commonParent.data == node.data) {
-            found = true
-        }
-        //verify if parent has right child
-        if (!commonParent.right && commonParent.data == biggerV) {
-            found = true
-        }
-        //veify if the right child is bigger than biggerV
-        if (commonParent.right.data >= biggerV) {
-            found = true
-        }
-        else {
-            commonParent = getParent(node, commonParent.data)
-        }
+    // check if both are on the same side of the tree, taking the root as reference
+    if (lowest <= node.data && bigger >= node.data) {
+        return node.data
     }
-    return commonParent.data
+    else {
+        const arrV1 = []
+        const arrV2 = []
+        getParents(node, v1, arrV1)
+        getParents(node, v2, arrV2)
+        let commonParents = arrV1.filter(element => {
+            return arrV2.includes(element)
+        })
+        return commonParents[commonParents.length - 1]
+    }
 }
-console.log(lowestCommonAncestor(newBT.root, 2, 5)) //case:1 ==> 4
-
-function isChild(parentNode,biggerV){
-    if(!parentNode){
-        return 'nochild'
-    }
-    if(parentNode<biggerV){
-        parentNode = parentNode.right
-    }
-    if (parentNode>=biggerV){
-        return parentNode
-    }
-
-}
+console.log(lowestCommonAncestor(newBT.root, 64, 26))
