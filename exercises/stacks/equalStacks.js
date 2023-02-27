@@ -11,7 +11,7 @@ function equalStacks(h1, h2, h3) {
 
     let areNotEquals = true
     while(areNotEquals){
-        let min = findMin(sumH1,sumH2,sumH3) 
+        let min = Math.min(sumH1,sumH2,sumH3) 
         if(sumH1==sumH2 && sumH2==sumH3){
             areNotEquals=false
         }
@@ -28,13 +28,4 @@ function equalStacks(h1, h2, h3) {
     return sumH2
 }
 
-function findMin(h1,h2,h3){
-    let min = h1
-    if(min>h2){
-        min = h2
-    }
-    if(min>h3){
-        min=h3
-    }
-    return min
-}
+
