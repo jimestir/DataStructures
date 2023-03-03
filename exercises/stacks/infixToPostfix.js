@@ -43,11 +43,7 @@ function infixToPostfix(exp) {
 
 function isOperand(exp) {
     const operator = new RegExp(/[a-zA-Z0-9]/)
-    if (operator.test(exp) == true) {
-        return true
-    } else {
-        return false
-    }
+    return operator.test(exp) == true
 }
 
 function isOperator(exp) {
